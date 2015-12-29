@@ -50,37 +50,37 @@ public class Robot extends SampleRobot {
     	stick = new Joystick(0);
     	board = new SmartDashboard();
     	
-        aTalon_fr = new CANTalon(9);
-        sTalon_fr = new CANTalon(7);
-        ai_fr = new AnalogInput(2);
-        encoder_fr = new Encoder(0, 1, true, EncodingType.k4X);
+        aTalon_fr = new CANTalon(4);
+        sTalon_fr = new CANTalon(3);
+        ai_fr = new AnalogInput(0);
+        encoder_fr = new Encoder(4, 5, true, EncodingType.k4X);
         angle_fr = new wAngle(0.01, aTalon_fr, ai_fr);
         angle_fr.reverse();
         angle_fr.setOffset(1.1);
         speed_fr = new wSpeed(0.05, sTalon_fr, encoder_fr);
         
-        aTalon_fl = new CANTalon(11);
-        sTalon_fl = new CANTalon(3);
+        aTalon_fl = new CANTalon(6);
+        sTalon_fl = new CANTalon(5);
         ai_fl = new AnalogInput(3);
-        encoder_fl = new Encoder(2, 3, true, EncodingType.k4X);
+        encoder_fl = new Encoder(0, 1, true, EncodingType.k4X);
         angle_fl = new wAngle(0.01, aTalon_fl, ai_fl);
         angle_fl.setOffset(1.4);
         speed_fl = new wSpeed(0.05, sTalon_fl, encoder_fl);
         //speed_fl.reverseInput();
         
         aTalon_bl = new CANTalon(8);
-        sTalon_bl = new CANTalon(2);
-        ai_bl = new AnalogInput(0);
-        encoder_bl = new Encoder(4, 5, true, EncodingType.k4X);
+        sTalon_bl = new CANTalon(7);
+        ai_bl = new AnalogInput(2);
+        encoder_bl = new Encoder(6, 7, true, EncodingType.k4X);
         angle_bl = new wAngle(0.01, aTalon_bl, ai_bl);
         angle_bl.setOffset(1.1);
         speed_bl = new wSpeed(0.05, sTalon_bl, encoder_bl);
         speed_bl.reverseInput();
         
-        aTalon_br = new CANTalon(10);
-        sTalon_br = new CANTalon(6);
+        aTalon_br = new CANTalon(2);
+        sTalon_br = new CANTalon(1);
         ai_br = new AnalogInput(1);
-        encoder_br = new Encoder(6, 7, true, EncodingType.k4X);
+        encoder_br = new Encoder(2, 3, true, EncodingType.k4X);
         angle_br = new wAngle(0.01, aTalon_br, ai_br);
         angle_br.setOffset(-1.6);
         speed_br = new wSpeed(0.05, sTalon_br, encoder_br);
@@ -226,7 +226,7 @@ public class Robot extends SampleRobot {
     	
         while (isOperatorControl() && isEnabled()) {
         	dashboardFL();
-        	updateSwerveVals();
+        	//updateSwerveVals();
         	/*
         	tempScale = stick.getRawAxis(5);
         	tempScale *= 180;
