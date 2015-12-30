@@ -54,7 +54,10 @@ public class wSpeed {
 	public void calculate()
 	{
 		plusM = getError() * kP;
-		runWheel(talon.get() + plusM);
+		if(desiredRPS == 0)
+			runWheel(0);
+		else
+			runWheel(talon.get() + plusM);
 	}
 	public void reverse()
 	{

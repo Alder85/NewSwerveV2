@@ -14,6 +14,7 @@ public class wAngle {
 	private boolean reversed = false;
 	private double offset;
 	private double cap = 1.0;
+	private double deadZone = 10;
 	
 	
 	
@@ -73,8 +74,10 @@ public class wAngle {
 		double err = getError(); //(-180..180)
 		double aP = kP * err;
 		double out = aP;
-		
-		runWheel(out); //cannot go below 0, upper limit based on PID constants
+		if(err < deadZone && err > -deadZone)
+			runWheel(0);
+		else
+			runWheel(out); //cannot go below 0, upper limit based on PID constants
 	}
 	
 	/*

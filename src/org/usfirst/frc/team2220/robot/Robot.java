@@ -56,25 +56,29 @@ public class Robot extends SampleRobot {
         encoder_fr = new Encoder(4, 5, true, EncodingType.k4X);
         angle_fr = new wAngle(0.01, aTalon_fr, ai_fr);
         angle_fr.reverse();
-        angle_fr.setOffset(1.1);
-        speed_fr = new wSpeed(0.05, sTalon_fr, encoder_fr);
+        angle_fr.setOffset(-2.1);
+        speed_fr = new wSpeed(0.005, sTalon_fr, encoder_fr);
+        speed_fr.reverseInput();
+        
         
         aTalon_fl = new CANTalon(6);
         sTalon_fl = new CANTalon(5);
         ai_fl = new AnalogInput(3);
         encoder_fl = new Encoder(0, 1, true, EncodingType.k4X);
         angle_fl = new wAngle(0.01, aTalon_fl, ai_fl);
-        angle_fl.setOffset(1.4);
-        speed_fl = new wSpeed(0.05, sTalon_fl, encoder_fl);
-        //speed_fl.reverseInput();
+        angle_fl.setOffset(1.7);
+        angle_fl.reverse();
+        speed_fl = new wSpeed(0.005, sTalon_fl, encoder_fl);
+        speed_fl.reverseInput();
         
         aTalon_bl = new CANTalon(8);
         sTalon_bl = new CANTalon(7);
         ai_bl = new AnalogInput(2);
         encoder_bl = new Encoder(6, 7, true, EncodingType.k4X);
         angle_bl = new wAngle(0.01, aTalon_bl, ai_bl);
-        angle_bl.setOffset(1.1);
-        speed_bl = new wSpeed(0.05, sTalon_bl, encoder_bl);
+        angle_bl.setOffset(-0.4);
+        angle_bl.reverse();
+        speed_bl = new wSpeed(0.005, sTalon_bl, encoder_bl);
         speed_bl.reverseInput();
         
         aTalon_br = new CANTalon(2);
@@ -82,8 +86,9 @@ public class Robot extends SampleRobot {
         ai_br = new AnalogInput(1);
         encoder_br = new Encoder(2, 3, true, EncodingType.k4X);
         angle_br = new wAngle(0.01, aTalon_br, ai_br);
-        angle_br.setOffset(-1.6);
-        speed_br = new wSpeed(0.05, sTalon_br, encoder_br);
+        angle_br.setOffset(-1.5);
+        angle_br.reverse();
+        speed_br = new wSpeed(0.005, sTalon_br, encoder_br);
         speed_br.reverseInput();
         
         }
@@ -135,7 +140,7 @@ public class Robot extends SampleRobot {
 	double ws1, ws2, ws3, ws4;
 	double wa1, wa2, wa3, wa4;
 	double max;
-	double curveRate = 1;
+	double maximumRPS = 8;
 	double deadZone = 0.15;
 	
 	public boolean withinDeadZone(double x)
@@ -145,7 +150,7 @@ public class Robot extends SampleRobot {
 	public void updateSwerveVals()
 	{
 		fwd = stick.getRawAxis(1) * -1;
-		str = stick.getRawAxis(0) * -1;
+		str = stick.getRawAxis(0);
 		rcw = stick.getRawAxis(5);
 		
 		
@@ -174,10 +179,10 @@ public class Robot extends SampleRobot {
     		ws3/=max;   //all in range 0 to 1
     		ws4/=max;
     	} 
-    	ws1*=curveRate;
-    	ws2*=curveRate;
-    	ws3*=curveRate;
-    	ws4*=curveRate;
+    	ws1*=maximumRPS;
+    	ws2*=maximumRPS;
+    	ws3*=maximumRPS;
+    	ws4*=maximumRPS;
     	
     	wa1 = Math.atan2(b, c) * 180 / Math.PI;
     	wa2 = Math.atan2(b, d) * 180 / Math.PI;  //-180 to 180
@@ -198,11 +203,32 @@ public class Robot extends SampleRobot {
 	    	angle_bl.setSetpoint(wa3);
 	    	angle_br.setSetpoint(wa4);
     	}
-    	
+
     	angle_fr.calculate();
     	angle_fl.calculate();
     	angle_bl.calculate();
     	angle_br.calculate();
+    	
+
+    	if( !(withinDeadZone(fwd) && withinDeadZone(str) && withinDeadZone(rcw)) )
+    	{
+	    	speed_fr.setRPS(-ws1);
+	    	speed_fl.setRPS(-ws2);
+	    	speed_bl.setRPS(-ws3);
+	    	speed_br.setRPS(-ws4);
+    	}
+    	else
+    	{
+    		speed_fr.setRPS(0);
+	    	speed_fl.setRPS(0);
+	    	speed_bl.setRPS(0);
+	    	speed_br.setRPS(0);
+    	}
+    	
+    	speed_fr.calculate();
+    	speed_fl.calculate();
+    	speed_bl.calculate();
+    	speed_br.calculate();
 	
 	}
     
@@ -225,20 +251,28 @@ public class Robot extends SampleRobot {
     public void operatorControl() {
     	
         while (isOperatorControl() && isEnabled()) {
+        	dashboardFR();
         	dashboardFL();
-        	//updateSwerveVals();
+        	dashboardBL();
+        	dashboardBR();
+        	updateSwerveVals();
         	/*
         	tempScale = stick.getRawAxis(5);
         	tempScale *= 180;
             angle_fr.setSetpoint(tempScale);
             angle_fr.calculate();
             
+            
         	tempScale2 = stick.getRawAxis(1);
         	tempScale2 *= 3;
         	speed_fr.setRPS(tempScale2);
         	speed_fr.calculate();
-        	board.putNumber("Potatoe", ai_fr.getAverageVoltage());
         	*/
+            board.putNumber("Angle FR Voltage", ai_fr.getAverageVoltage());
+        	board.putNumber("Angle FL Voltage", ai_fl.getAverageVoltage());
+        	board.putNumber("Angle BL Voltage", ai_bl.getAverageVoltage());
+        	board.putNumber("Angle BR Voltage", ai_br.getAverageVoltage());
+        	
             Timer.delay(0.005);		// wait for a motor update time
         }
     }
