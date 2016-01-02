@@ -4,11 +4,7 @@ package org.usfirst.frc.team2220.robot;
 
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SampleRobot;
-import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Joystick.ButtonType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends SampleRobot {
@@ -256,6 +252,13 @@ public class Robot extends SampleRobot {
         	dashboardBL();
         	dashboardBR();
         	updateSwerveVals();
+        	
+        	/*
+        	board.putNumber("ButtonCount", stick.getButtonCount());
+        	board.putNumber("Throttle", stick.getThrottle());
+        	board.putBoolean("getTrigger", stick.getTrigger());
+        	board.putBoolean("Five", stick.getRawButton(5));
+        	*/
         	/*
         	tempScale = stick.getRawAxis(5);
         	tempScale *= 180;
